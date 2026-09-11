@@ -1,6 +1,10 @@
 package com.example.lkcj1mb;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +13,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+    private EditText etPralkaNumber;
+    private TextView tvPralkaStatus;
+    private Button btnPralkaZatwierdz;
+    private Button btnOdkurzaczWlacz;
+    private TextView tvOdkurzaczStatus;
+
+    private boolean odkurzaczWlaczony = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +32,55 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        initializeViews();
+
+        setupListeners();
+    }
+
+    private void initializeViews() {
+        etPralkaNumber = findViewById(R.id.etPralkaNumber);
+        tvPralkaStatus = findViewById(R.id.tvPralkaStatus);
+        btnPralkaZatwierdz = findViewById(R.id.btnPralkaZatwierdz);
+        btnOdkurzaczWlacz = findViewById(R.id.btnOdkurzaczWlacz);
+        tvOdkurzaczStatus = findViewById(R.id.tvOdkurzaczStatus);
+    }
+
+    private void setupListeners() {
+        btnPralkaZatwierdz.setOnClickListener(v -> {
+            handlePralkaZatwierdz();
+        });
+
+        btnOdkurzaczWlacz.setOnClickListener(v -> {
+            handleOdkurzaczToggle();
+        });
+    }
+
+    private void handlePralkaZatwierdz() {
+        String input = etPralkaNumber.getText().toString().trim();
+
+        if (input.isEmpty()) {
+            Toast.makeText(this, "Proszę wpisać numer prania", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+            int numer = Integer.parseInt(input);
+
+            if (numer >= 1 && numer <= 12) {
+                tvPralkaStatus.setText("Numer prania: " + numer);
+            }
+
+    }
+
+    private void handleOdkurzaczToggle() {
+        odkurzaczWlaczony = !odkurzaczWlaczony;
+
+        if (odkurzaczWlaczony) {
+            btnOdkurzaczWlacz.setText("Wyłącz");
+            tvOdkurzaczStatus.setText("Odkurzacz włączony");
+        } else {
+            btnOdkurzaczWlacz.setText("Włącz");
+            tvOdkurzaczStatus.setText("Odkurzacz wyłączony");
+        }
     }
 }
